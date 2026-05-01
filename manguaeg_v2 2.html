@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mette PS 🎮</title>
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23EC008C'/%3E%3Ctext x='90' y='115' font-family='Arial Black,Arial' font-weight='900' font-size='58' fill='white' text-anchor='middle'%3EMette%3C/text%3E%3C/svg%3E">
+<meta name="apple-mobile-web-app-title" content="Mette PS">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0e17;
+    --card: #1a1828;
+    --card2: #221f35;
+    --accent: #ff6b35;
+    --gold: #ffd166;
+    --green: #06d6a0;
+    --red: #ef476f;
+    --blue: #118ab2;
+    --purple: #a855f7;
+    --text: #fffffe;
+    --muted: #a7a9be;
+    --border: rgba(255,255,255,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Nunito', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 10%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 50% 60%, rgba(255,255,255,0.25) 0%, transparent 100%),
+      radial-gradient(1px 1px at 10% 80%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 70%, rgba(255,255,255,0.2) 0%, transparent 100%),
+      radial-gradient(2px 2px at 35% 15%, rgba(255,209,102,0.4) 0%, transparent 100%),
+      radial-gradient(2px 2px at 65% 85%, rgba(168,85,247,0.4) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .ps-icon {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 4px;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 28px;
+    background: linear-gradient(135deg, var(--accent), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.5px;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 2px;
+  }
+
+  .time-bank {
+    background: linear-gradient(135deg, #1e1b4b, #312e81);
+    border: 1px solid rgba(168,85,247,0.3);
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .time-bank::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 120px; height: 120px;
+    background: radial-gradient(circle, rgba(168,85,247,0.2) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .time-bank-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--purple);
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .time-display {
+    font-family: 'Fredoka One', cursive;
+    font-size: 56px;
+    color: var(--gold);
+    line-height: 1;
+    text-shadow: 0 0 30px rgba(255,209,102,0.5);
+  }
+
+  .time-display span {
+    font-size: 20px;
+    color: var(--muted);
+  }
+
+  .time-bar-wrap {
+    background: rgba(255,255,255,0.1);
+    border-radius: 100px;
+    height: 10px;
+    margin-top: 12px;
+    overflow: hidden;
+  }
+
+  .time-bar {
+    height: 100%;
+    border-radius: 100px;
+    background: linear-gradient(90deg, var(--purple), var(--gold));
+    transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .time-bar-max {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+    text-align: right;
+  }
+
+  .section-title {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    font-weight: 800;
+    margin-bottom: 12px;
+  }
+
+  .day-selector {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+  }
+
+  .day-btn {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px 4px;
+    color: var(--muted);
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .day-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(255,107,53,0.4);
+  }
+
+  .day-btn.done {
+    background: rgba(6,214,160,0.15);
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .day-btn .day-check {
+    display: block;
+    font-size: 14px;
+  }
+
+  .tasks-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .task-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--card2);
+    border-radius: 14px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.25s;
+    border: 2px solid transparent;
+    user-select: none;
+  }
+
+  .task-item:last-child { margin-bottom: 0; }
+
+  .task-item:hover {
+    border-color: rgba(255,107,53,0.3);
+    transform: translateX(2px);
+  }
+
+  .task-item.completed {
+    background: rgba(6,214,160,0.08);
+    border-color: rgba(6,214,160,0.25);
+  }
+
+  .task-item.completed .task-name {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+
+  .task-checkbox {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2.5px solid var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 14px;
+    transition: all 0.2s;
+  }
+
+  .task-item.completed .task-checkbox {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .task-info { flex: 1; }
+
+  .task-name {
+    font-size: 15px;
+    font-weight: 700;
+    transition: all 0.2s;
+  }
+
+  .task-reward {
+    font-size: 12px;
+    color: var(--gold);
+    font-weight: 700;
+    margin-top: 1px;
+  }
+
+  .task-emoji { font-size: 22px; }
+
+  .bonus-badge {
+    background: linear-gradient(135deg, rgba(255,209,102,0.15), rgba(255,107,53,0.15));
+    border: 1px solid rgba(255,209,102,0.3);
+    border-radius: 14px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    transition: all 0.3s;
+  }
+
+  .bonus-badge.earned {
+    background: linear-gradient(135deg, rgba(255,209,102,0.3), rgba(255,107,53,0.3));
+    border-color: var(--gold);
+    box-shadow: 0 0 20px rgba(255,209,102,0.2);
+  }
+
+  .bonus-badge .bonus-icon { font-size: 24px; }
+  .bonus-badge .bonus-text { font-size: 13px; font-weight: 700; }
+  .bonus-badge .bonus-sub { font-size: 11px; color: var(--muted); }
+
+  .admin-section { margin-top: 16px; }
+
+  .admin-toggle {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 14px;
+    color: var(--muted);
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+  }
+
+  .admin-toggle:hover { border-color: var(--red); color: var(--red); }
+
+  .admin-panel {
+    display: none;
+    background: var(--card);
+    border: 1px solid rgba(239,71,111,0.25);
+    border-radius: 16px;
+    padding: 16px;
+    margin-top: 8px;
+  }
+
+  .admin-panel.open { display: block; }
+
+  .admin-label {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    margin-top: 12px;
+  }
+
+  .admin-label:first-child { margin-top: 0; }
+
+  .admin-btns {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .admin-btn {
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: none;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .admin-btn.subtract {
+    background: rgba(239,71,111,0.15);
+    color: var(--red);
+    border: 1px solid rgba(239,71,111,0.3);
+  }
+
+  .admin-btn.subtract:hover { background: var(--red); color: white; }
+
+  .admin-btn.add {
+    background: rgba(6,214,160,0.15);
+    color: var(--green);
+    border: 1px solid rgba(6,214,160,0.3);
+  }
+
+  .admin-btn.add:hover { background: var(--green); color: white; }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 20px;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 100;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    white-space: nowrap;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  .toast.positive { border-color: var(--green); }
+  .toast.negative { border-color: var(--red); }
+
+  .confetti-dot {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99;
+    animation: confetti-fall 1.2s forwards;
+  }
+
+  @keyframes confetti-fall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(200px) rotate(360deg); opacity: 0; }
+  }
+
+  .weekend-card {
+    background: linear-gradient(135deg, #1a1828, #1e1b4b);
+    border: 1px solid rgba(168,85,247,0.2);
+    border-radius: 20px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .weekend-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 18px;
+    color: var(--purple);
+    margin-bottom: 4px;
+  }
+
+  .weekend-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  .weekend-time {
+    font-family: 'Fredoka One', cursive;
+    font-size: 42px;
+    color: var(--gold);
+    text-align: center;
+    text-shadow: 0 0 20px rgba(255,209,102,0.4);
+  }
+
+  .weekend-time span { font-size: 18px; color: var(--muted); }
+
+  .weekend-note {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 6px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <span class="ps-icon">🎮</span>
+    <div class="title">PS Mänguaja Koguja</div>
+    <div class="subtitle">Tee ära, teeni aega!</div>
+  </div>
+
+  <div class="time-bank">
+    <div class="time-bank-label">⏱ Kogutud mänguaeg</div>
+    <div class="time-display" id="totalDisplay">0 <span>min</span></div>
+    <div class="time-bar-wrap">
+      <div class="time-bar" id="timeBar" style="width:0%"></div>
+    </div>
+    <div class="time-bar-max" id="barLabel">0 / 120 min</div>
+  </div>
+
+  <div class="weekend-card">
+    <div class="weekend-title">🏆 Nädalavahetuse aeg</div>
+    <div class="weekend-sub">Kõik kogutud minutid kantakse üle reede õhtul</div>
+    <div class="weekend-time" id="weekendDisplay">0 <span>min</span></div>
+    <div class="weekend-note" id="weekendNote">Kogud veel minuteid — tubli!</div>
+  </div>
+
+  <div class="section-title">📅 Vali päev</div>
+  <div class="day-selector" id="daySelector"></div>
+
+  <div class="tasks-card" id="tasksCard">
+    <div class="section-title" id="tasksTitle">Tänased ülesanded</div>
+    <div id="tasksList"></div>
+    <div class="bonus-badge" id="bonusBadge">
+      <span class="bonus-icon">⭐</span>
+      <div>
+        <div class="bonus-text">Kõik tehtud → +5 min boonus!</div>
+        <div class="bonus-sub" id="bonusSub">Tee kõik ära ja saad boonust</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:16px">
+    <button onclick="resetWeek()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:16px;background:rgba(239,71,111,0.12);color:var(--red);border:1px solid rgba(239,71,111,0.3);font-family:Nunito,sans-serif;font-size:14px;font-weight:800;cursor:pointer;">
+      🔄 Lähtesta nädal (0 minutit)
+    </button>
+  </div>
+
+  <div class="admin-section">
+    <button class="admin-toggle" onclick="toggleAdmin()">
+      🔒 Vanema seaded
+    </button>
+    <div class="admin-panel" id="adminPanel">
+      <div class="admin-label">➕ Lisa aega</div>
+      <div class="admin-btns">
+        <button class="admin-btn add" onclick="adjustTime(5)">+5 min</button>
+        <button class="admin-btn add" onclick="adjustTime(10)">+10 min</button>
+        <button class="admin-btn add" onclick="adjustTime(15)">+15 min</button>
+      </div>
+      <div class="admin-label">➖ Võta aega ära</div>
+      <div class="admin-btns">
+        <button class="admin-btn subtract" onclick="adjustTime(-5)">−5 min</button>
+        <button class="admin-btn subtract" onclick="adjustTime(-10)">−10 min</button>
+        <button class="admin-btn subtract" onclick="adjustTime(-15)">−15 min</button>
+      </div>
+      <div class="admin-label" style="margin-top:16px">📝 Halda ülesandeid</div>
+      <div id="customTaskList" style="margin-bottom:10px"></div>
+      <div style="background:var(--card2);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;gap:6px">
+          <input id="newTaskEmoji" type="text" placeholder="🌟" maxlength="2"
+            style="width:44px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:18px;text-align:center;padding:6px;outline:none;" />
+          <input id="newTaskName" type="text" placeholder="Ülesande nimi..."
+            style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:13px;padding:6px 10px;font-family:Nunito,sans-serif;outline:none;" />
+        </div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <label style="font-size:12px;color:var(--muted);font-weight:700;white-space:nowrap">Minuteid:</label>
+          <input id="newTaskMins" type="number" value="10" min="1" max="30" step="1"
+            style="width:64px;background:var(--bg);border:1px solid var(--border);border-radius:10px;color:var(--gold);font-size:14px;font-weight:800;text-align:center;padding:6px;font-family:Nunito,sans-serif;outline:none;" />
+          <button onclick="addCustomTask()"
+            style="flex:1;background:var(--green);border:none;border-radius:10px;color:#0f0e17;font-family:Nunito,sans-serif;font-size:13px;font-weight:800;padding:8px;cursor:pointer;">
+            ✚ Lisa ülesanne
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const MAX_MINUTES = 120;
+
+const DAYS = ['E', 'T', 'K', 'N', 'R', 'L', 'P'];
+const DAY_NAMES = ['Esmaspäev', 'Teisipäev', 'Kolmapäev', 'Neljapäev', 'Reede', 'Laupäev', 'Pühapäev'];
+
+const DEFAULT_TASKS = [
+  { id: 'toys', emoji: '🧸', name: 'Mänguasjad oma kohale', minutes: 10 },
+  { id: 'teeth_morning', emoji: '🦷', name: 'Hambad pestud (hommik)', minutes: 2 },
+  { id: 'wash_morning', emoji: '🚿', name: 'Keha pestud (hommik)', minutes: 2 },
+  { id: 'teeth_evening', emoji: '🌙', name: 'Hambad pestud (õhtu)', minutes: 2 },
+  { id: 'wash_evening', emoji: '🛁', name: 'Keha pestud (õhtu)', minutes: 2 },
+];
+
+const BONUS = 5;
+
+function getState() {
+  const def = { totalMinutes: 0, weekendMinutes: 0, days: {}, customTasks: [] };
+  DAYS.forEach((d, i) => { def.days[i] = { tasks: {}, bonusEarned: false }; });
+  try {
+    const s = localStorage.getItem('pstime_v3');
+    if (s) {
+      const parsed = JSON.parse(s);
+      DAYS.forEach((d, i) => { if (!parsed.days[i]) parsed.days[i] = { tasks: {}, bonusEarned: false }; });
+      if (!parsed.customTasks) parsed.customTasks = [];
+      return parsed;
+    }
+    return def;
+  } catch { return def; }
+}
+
+function saveState(s) { localStorage.setItem('pstime_v3', JSON.stringify(s)); }
+function getAllTasks() { return [...DEFAULT_TASKS, ...(state.customTasks || [])]; }
+
+let state = getState();
+const jsToIdx = { 1:0, 2:1, 3:2, 4:3, 5:4, 6:5, 0:6 };
+let activeDay = jsToIdx[new Date().getDay()];
+
+function renderDays() {
+  const sel = document.getElementById('daySelector');
+  sel.innerHTML = '';
+  DAYS.forEach((d, i) => {
+    const btn = document.createElement('button');
+    const dayState = state.days[i] || { tasks: {}, bonusEarned: false };
+    const tasks = getAllTasks();
+    const allDone = tasks.length > 0 && tasks.every(t => dayState.tasks[t.id]);
+    btn.className = 'day-btn' + (i === activeDay ? ' active' : '') + (allDone && i !== activeDay ? ' done' : '');
+    btn.innerHTML = `<span class="day-check">${allDone ? '✓' : d}</span>${d}`;
+    btn.onclick = () => { activeDay = i; render(); };
+    sel.appendChild(btn);
+  });
+}
+
+function renderTasks() {
+  const dayState = state.days[activeDay] || { tasks: {}, bonusEarned: false };
+  const list = document.getElementById('tasksList');
+  list.innerHTML = '';
+  const tasks = getAllTasks();
+
+  tasks.forEach(task => {
+    const done = !!dayState.tasks[task.id];
+    const item = document.createElement('div');
+    item.className = 'task-item' + (done ? ' completed' : '');
+    item.innerHTML = `
+      <span class="task-emoji">${task.emoji}</span>
+      <div class="task-info">
+        <div class="task-name">${task.name}</div>
+        <div class="task-reward">+${task.minutes} minutit mänguaega</div>
+      </div>
+      <div class="task-checkbox">${done ? '✓' : ''}</div>
+    `;
+    item.onclick = () => toggleTask(task.id);
+    list.appendChild(item);
+  });
+
+  const allDone = tasks.length > 0 && tasks.every(t => dayState.tasks[t.id]);
+  const badge = document.getElementById('bonusBadge');
+  const sub = document.getElementById('bonusSub');
+  if (allDone) {
+    badge.classList.add('earned');
+    sub.textContent = `✨ Boonus teenitud! +${BONUS} min`;
+  } else {
+    badge.classList.remove('earned');
+    const left = tasks.filter(t => !dayState.tasks[t.id]).length;
+    sub.textContent = `Puudu ${left} ülesanne${left === 1 ? '' : 't'}`;
+  }
+  document.getElementById('tasksTitle').textContent = DAY_NAMES[activeDay] + ' ülesanded';
+}
+
+function renderTime() {
+  const mins = Math.max(0, state.totalMinutes);
+  const capped = Math.min(mins, MAX_MINUTES);
+  document.getElementById('totalDisplay').innerHTML = `${mins} <span>min</span>`;
+  document.getElementById('timeBar').style.width = (capped / MAX_MINUTES * 100) + '%';
+  document.getElementById('barLabel').textContent = `${capped} / ${MAX_MINUTES} min`;
+  const wEnd = state.weekendMinutes || 0;
+  document.getElementById('weekendDisplay').innerHTML = `${wEnd} <span>min</span>`;
+  document.getElementById('weekendNote').textContent =
+    wEnd === 0 ? 'Kogud veel minuteid — tubli!' :
+    wEnd < 30 ? '😊 Natuke aega — proovi rohkem koguda!' :
+    wEnd < 60 ? '😄 Pool tundi on sul taskus!' : '🎉 Suurepärane nädal!';
+}
+
+function render() { renderDays(); renderTasks(); renderTime(); }
+
+function toggleTask(taskId) {
+  if (!state.days[activeDay]) state.days[activeDay] = { tasks: {}, bonusEarned: false };
+  const dayState = state.days[activeDay];
+  const tasks = getAllTasks();
+  const task = tasks.find(t => t.id === taskId);
+  const wasAllDone = tasks.every(t => dayState.tasks[t.id]);
+
+  if (dayState.tasks[taskId]) {
+    dayState.tasks[taskId] = false;
+    state.totalMinutes = Math.max(0, state.totalMinutes - task.minutes);
+    state.weekendMinutes = Math.max(0, (state.weekendMinutes || 0) - task.minutes);
+    if (wasAllDone && dayState.bonusEarned) {
+      state.totalMinutes = Math.max(0, state.totalMinutes - BONUS);
+      state.weekendMinutes = Math.max(0, (state.weekendMinutes || 0) - BONUS);
+      dayState.bonusEarned = false;
+    }
+    showToast(`−${task.minutes} min`, 'negative');
+  } else {
+    dayState.tasks[taskId] = true;
+    state.totalMinutes += task.minutes;
+    state.weekendMinutes = (state.weekendMinutes || 0) + task.minutes;
+    showToast(`+${task.minutes} min mänguaega! 🎮`, 'positive');
+    spawnConfetti();
+    const nowAllDone = tasks.every(t => dayState.tasks[t.id]);
+    if (nowAllDone && !dayState.bonusEarned) {
+      dayState.bonusEarned = true;
+      state.totalMinutes += BONUS;
+      state.weekendMinutes = (state.weekendMinutes || 0) + BONUS;
+      setTimeout(() => showToast(`⭐ +${BONUS} min boonus! Kõik tehtud!`, 'positive'), 600);
+    }
+  }
+  saveState(state);
+  render();
+}
+
+function adjustTime(mins) {
+  state.totalMinutes = Math.max(0, state.totalMinutes + mins);
+  state.weekendMinutes = Math.max(0, (state.weekendMinutes || 0) + mins);
+  saveState(state);
+  render();
+  showToast(mins > 0 ? `+${mins} min lisatud` : `${mins} min eemaldatud`, mins > 0 ? 'positive' : 'negative');
+}
+
+function resetWeek() {
+  if (!confirm('Lähtesta kogu nädal? Kõik minutid kustutatakse.')) return;
+  state.totalMinutes = 0;
+  state.weekendMinutes = 0;
+  DAYS.forEach((d, i) => { state.days[i] = { tasks: {}, bonusEarned: false }; });
+  saveState(state);
+  render();
+  showToast('🔄 Nädal lähtestatud', 'negative');
+}
+
+function addCustomTask() {
+  const nameEl = document.getElementById('newTaskName');
+  const minsEl = document.getElementById('newTaskMins');
+  const emojiEl = document.getElementById('newTaskEmoji');
+  const name = nameEl.value.trim();
+  const mins = parseInt(minsEl.value) || 10;
+  const emoji = emojiEl.value.trim() || '✅';
+  if (!name) { nameEl.focus(); return; }
+  if (!state.customTasks) state.customTasks = [];
+  state.customTasks.push({ id: 'custom_' + Date.now(), emoji, name, minutes: mins });
+  saveState(state);
+  nameEl.value = ''; minsEl.value = '10'; emojiEl.value = '';
+  renderCustomTaskList();
+  render();
+  showToast('✅ Ülesanne lisatud!', 'positive');
+}
+
+function removeCustomTask(id) {
+  state.customTasks = (state.customTasks || []).filter(t => t.id !== id);
+  DAYS.forEach((d, i) => { if (state.days[i]?.tasks) delete state.days[i].tasks[id]; });
+  saveState(state);
+  renderCustomTaskList();
+  render();
+  showToast('🗑 Ülesanne eemaldatud', 'negative');
+}
+
+function renderCustomTaskList() {
+  const el = document.getElementById('customTaskList');
+  if (!el) return;
+  el.innerHTML = '';
+  (state.customTasks || []).forEach(t => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--card2);border-radius:10px;margin-bottom:6px;';
+    row.innerHTML = `
+      <span style="font-size:18px">${t.emoji}</span>
+      <span style="flex:1;font-size:13px;font-weight:700">${t.name}</span>
+      <span style="font-size:12px;color:var(--gold);font-weight:700">+${t.minutes}min</span>
+      <button onclick="removeCustomTask('${t.id}')" style="background:rgba(239,71,111,0.2);border:none;border-radius:8px;color:var(--red);padding:4px 8px;cursor:pointer;font-size:12px;font-weight:800">✕</button>
+    `;
+    el.appendChild(row);
+  });
+  if (!(state.customTasks || []).length) {
+    el.innerHTML = '<div style="font-size:12px;color:var(--muted);text-align:center;padding:8px">Lisaülesandeid pole</div>';
+  }
+}
+
+function toggleAdmin() {
+  const p = document.getElementById('adminPanel');
+  p.classList.toggle('open');
+  if (p.classList.contains('open')) renderCustomTaskList();
+}
+
+let toastTimer;
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = 'toast'; }, 2200);
+}
+
+function spawnConfetti() {
+  const colors = ['#ff6b35','#ffd166','#06d6a0','#a855f7','#118ab2'];
+  for (let i = 0; i < 12; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'confetti-dot';
+    dot.style.cssText = `left:${20+Math.random()*60}%;top:${30+Math.random()*30}%;background:${colors[Math.floor(Math.random()*colors.length)]};animation-delay:${Math.random()*0.3}s;animation-duration:${0.8+Math.random()*0.6}s;`;
+    document.body.appendChild(dot);
+    setTimeout(() => dot.remove(), 2000);
+  }
+}
+
+render();
+renderCustomTaskList();
+</script>
+</body>
+</html>
